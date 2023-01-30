@@ -38,6 +38,7 @@ class ServiceController {
         data: "Internal server error try again",
       });
     } catch (error) {
+      console.log(error);
       return res.json({
         success: false,
         data: error.message,
