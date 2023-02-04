@@ -4,9 +4,10 @@ require("./db/dbConnect")();
 const router = require("./routes");
 const cors = require("cors");
 const app = express();
+const bodyParser = require('body-parser')
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false, limit: "50mb" }));
+app.use(bodyParser.json({ limit: "50mb" }));
 
 const corsOptions = {
   origin: ["https://zezosoft.in"],
