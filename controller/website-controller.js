@@ -9,7 +9,7 @@ const https = require("https");
 const { Client } = require("ssh2");
 const { log } = require("console");
 class WebsiteController {
-  // host =
+
 
   // async createWebsite(req, res, next) {
   //   try {
@@ -474,33 +474,12 @@ class WebsiteController {
       });
     }
   }
-  
+
   async fetchPackage(req, res, next) {
     try {
-      if (
-        !req.body.package ||
-        req.body.package === "" ||
-        req.body.package === undefined
-      ) {
-        return res.status(400).json({
-          success: false,
-          error: "all fields are  required ",
-        });
-      }
-
       const data = {
         serverUserName: "admin",
-        controller: "submitPackage",
-        packageName: req.body.package,
-        diskSpace: "100",
-        bandwidth: "100",
-        dataBases: "100",
-        ftpAccounts: "100",
-        emails: "100",
-        allowedDomains: "1",
-        allowedDomains: "1",
-        api: "1",
-        allowFullDomain: "1",
+        controller: "fetchPackages",
       };
 
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
@@ -518,10 +497,10 @@ class WebsiteController {
           }),
         }
       );
-      console.log(
-        "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
-        resData
-      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
       if (resData.status === 200) {
         return res.status(200).json({
           success: true,
@@ -548,6 +527,8 @@ class WebsiteController {
   }
   async modifyPackage(req, res, next) {
     try {
+      console.log(req.body.diskSpace);
+
       if (
         !req.body.package ||
         req.body.package === "" ||
@@ -561,17 +542,18 @@ class WebsiteController {
 
       const data = {
         serverUserName: "admin",
-        controller: "submitPackage",
+        controller: "submitPackageModify",
         packageName: req.body.package,
-        diskSpace: "100",
-        bandwidth: "100",
-        dataBases: "100",
-        ftpAccounts: "100",
-        emails: "100",
-        allowedDomains: "1",
-        allowedDomains: "1",
-        api: "1",
-        allowFullDomain: "1",
+        diskSpace: req.body.diskSpace ? +req.body.diskSpace : 100,
+        bandwidth: req.body.bandwidth ? +req.body.bandwidth : 100,
+        dataBases: req.body.dataBases ? +req.body.dataBases : 100,
+        ftpAccounts: req.body.ftpAccounts ? +req.body.ftpAccounts : 50,
+        emails: req.body.emails ? +req.body.emails : 100,
+        allowedDomains: req.body.allowedDomains ? +req.body.allowedDomains : 1,
+        api: req.body.api ? +req.body.api : 1,
+        allowFullDomain: +req.body.allowFullDomain
+          ? +req.body.allowFullDomain
+          : 1,
       };
 
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
@@ -589,10 +571,10 @@ class WebsiteController {
           }),
         }
       );
-      console.log(
-        "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
-        resData
-      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
       if (resData.status === 200) {
         return res.status(200).json({
           success: true,
