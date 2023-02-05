@@ -9,8 +9,6 @@ const https = require("https");
 const { Client } = require("ssh2");
 const { log } = require("console");
 class WebsiteController {
-
-
   // async createWebsite(req, res, next) {
   //   try {
   //     console.log("hiughiadhgidhgpfihgifu");
@@ -76,6 +74,9 @@ class WebsiteController {
   //     });
   //   }
   // }
+
+  // @############Website Functions##################@
+
   async createWebsite(req, res, next) {
     try {
       if (
@@ -94,7 +95,7 @@ class WebsiteController {
         controller: "submitWebsiteCreation",
         domainName: req.body.domain,
         package: "Default",
-        adminEmail: "usman@cyberpersons.com",
+        adminEmail: "sandy@cyberpersons.com",
         phpSelection: "PHP 7.4",
         websiteOwner: "admin",
         ssl: 0,
@@ -341,6 +342,7 @@ class WebsiteController {
     }
   }
 
+  // @############Package Functions##################@
   async createPackage(req, res, next) {
     try {
       if (
@@ -412,6 +414,7 @@ class WebsiteController {
       });
     }
   }
+
   async deletePackage(req, res, next) {
     try {
       if (
@@ -446,10 +449,10 @@ class WebsiteController {
           }),
         }
       );
-      console.log(
-        "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
-        resData
-      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
       if (resData.status === 200) {
         return res.status(200).json({
           success: true,
@@ -525,9 +528,10 @@ class WebsiteController {
       });
     }
   }
+
   async modifyPackage(req, res, next) {
     try {
-      console.log(req.body.diskSpace);
+      // console.log(req.body.diskSpace);
 
       if (
         !req.body.package ||
@@ -600,6 +604,614 @@ class WebsiteController {
     }
   }
 
+  // @############FTP Functions##################@
+  async createFTP(req, res, next) {
+    try {
+      // console.log(req.body.diskSpace);
+
+      if (
+        !req.body.domain ||
+        req.body.domain === "" ||
+        req.body.domain === undefined ||
+        !req.body.user ||
+        req.body.user === "" ||
+        req.body.user === undefined ||
+        !req.body.password ||
+        req.body.password === "" ||
+        req.body.password === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "submitFTPCreation",
+        ftpDomain: req.body.domain,
+        ftpUserName: req.body.user,
+        passwordByPass: req.body.password,
+        path: "",
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+
+  async deleteFTP(req, res, next) {
+    try {
+      // console.log(req.body.user);
+
+      if (
+        !req.body.user ||
+        req.body.user === "" ||
+        req.body.user === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "submitFTPDelete",
+        ftpUsername: req.body.user,
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        console.log("water   ");
+
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+
+  async fetchFTP(req, res, next) {
+    try {
+      // console.log(req.body.user);
+
+      if (
+        !req.body.domain ||
+        req.body.domain === "" ||
+        req.body.domain === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "getAllFTPAccounts",
+        selectedDomain: req.body.domain,
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        console.log("water   ");
+
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+
+  // @############Email Functions##################@
+  async createEmail(req, res, next) {
+    try {
+      // console.log(req.body.user);
+
+      if (
+        !req.body.domain ||
+        req.body.domain === "" ||
+        req.body.domain === undefined ||
+        !req.body.user ||
+        req.body.user === "" ||
+        req.body.user === undefined ||
+        !req.body.password ||
+        req.body.password === "" ||
+        req.body.password === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "submitEmailCreation",
+        domain: req.body.domain,
+        username: req.body.user,
+        passwordByPass: req.body.password,
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        console.log("water   ");
+
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+
+  async deleteEmail(req, res, next) {
+    try {
+      // console.log(req.body.user);
+
+      if (
+        !req.body.email ||
+        req.body.email === "" ||
+        req.body.email === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "submitEmailDeletion",
+        email: req.body.email,
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        console.log("water   ");
+
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+
+  async fetchEmail(req, res, next) {
+    try {
+      // console.log(req.body.user);
+
+      if (
+        !req.body.domain ||
+        req.body.domain === "" ||
+        req.body.domain === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "getEmailsForDomain",
+        domain: req.body.domain,
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        console.log("water   ");
+
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+
+  // @############DNS Functions##################@
+
+  async createDNS(req, res, next) {
+    try {
+      // console.log(req.body.user);
+
+      if (
+        !req.body.domain ||
+        req.body.domain === "" ||
+        req.body.domain === undefined ||
+        !req.body.user ||
+        req.body.user === "" ||
+        req.body.user === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "addDNSRecord",
+        selectedZone: req.body.domain,
+        recordName: req.body.user,
+        recordContentA: "192.168.100.1",
+        ttl: 1400,
+        recordType: "A",
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        console.log("water   ");
+
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+
+  async fetchDNS(req, res, next) {
+    try {
+      // console.log(req.body.user);
+
+      if (
+        !req.body.domain ||
+        req.body.domain === "" ||
+        req.body.domain === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "getCurrentRecordsForDomain",
+        selectedZone: req.body.domain,
+        currentSelection: "aRecord",
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        console.log("water   ");
+
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+  async deleteDNS(req, res, next) {
+    try {
+      // console.log(req.body.user);
+
+      if (!req.body.id || req.body.id === "" || req.body.id === undefined) {
+        return res.status(400).json({
+          success: false,
+          error: "all fields are  required ",
+        });
+      }
+
+      const data = {
+        serverUserName: "admin",
+        controller: "deleteDNSRecord",
+        id: +req.body.id,
+      };
+
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = false;
+
+      const resData = await axios.post(
+        "https://okabadiwala.com:8090/cloudAPI/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic YWRtaW46JEFuZGVlcDAzMQ==",
+          },
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false,
+          }),
+        }
+      );
+      // console.log(
+      //   "🚀 ~ file: website-controller.js:104 ~ WebsiteController ~ test ~ resData",
+      //   resData
+      // );
+      if (resData.status === 200) {
+        return res.status(200).json({
+          success: true,
+          data: JSON.stringify(resData.data),
+        });
+      } else {
+        console.log("water   ");
+
+        return res.status(400).json({
+          success: false,
+          error: resData.data.error_message,
+        });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: website-controller.js:96 ~ WebsiteController ~ test ~ error",
+        error
+      );
+      return res.json({
+        success: false,
+        data: error.message,
+      });
+    }
+  }
+
+  // @############SSH Functions##################@
   async loginToSsh(req, res, next) {
     try {
       // const client = new Client();
