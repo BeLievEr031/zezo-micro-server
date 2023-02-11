@@ -2104,7 +2104,7 @@ class WebsiteController {
         },
         commands: [
           // "cd /home/stringbeatz.com/public_html && && git clone https://github.com/BeLievEr031/assignment_google.git .",
-          "cd /home/stringbeatz.com/ && rm -rf public_html && mkdir public_html && cd public_html && git clone https://github.com/BeLievEr031/next-theme.git . && npm install && npm run build ",
+          "cd /home/stringbeatz.com/ && rm -rf public_html && mkdir public_html && cd public_html && mkdir out && cd out && git clone https://github.com/BeLievEr031/out.git . ",
           "ls -l",
         ],
       };
